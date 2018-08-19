@@ -3,12 +3,36 @@
 
     ws.addEventListener('message', function(r) {
 		r = JSON.parse(r.data);
-		
+
 		if (r.route) {
 			window.history.pushState(r.route.data, r.route.title, r.route.url);
 		}
 
-        if (r.evt && !r.evt.data) {
+		if (r.length) {
+			let i = 0;
+			for (i; i < r.length; i += 1) {
+				let componentData = r[i];
+				const attrName = 'data-ace-' + componentData.cmpType;
+				let node = document.querySelector('[' + attrName + '="' + componentData.cmpId + '"]');
+				let prop;
+
+				if (node) {
+					for (prop in componentData) {
+						if (prop !== 'cmpType' && prop !== 'cmpId') {
+							if (prop === 'text') {
+								node.innerHTML = componentData.text;
+							} else {
+								node[prop] = componentData[prop];
+							}
+						}
+					}
+				} else {
+
+				}
+			}
+		}
+
+		if (r.evt && !r.evt.data) {
 			r.evt = new CustomEvent(r.evt);
 			
 			if (r.data) {

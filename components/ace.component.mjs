@@ -9,6 +9,7 @@ class AceComponent {
         this.events = {};
         this.markup;
         this.pug = pug;
+        this.page;
         this.components = [];
     }
 
@@ -22,6 +23,38 @@ class AceComponent {
 
     generateId() {
         return Math.floor(Math.random() * (9999 - 1) + 1).toString();
+    }
+
+    getData() {
+        return {};
+    }
+
+    getComponentData() {
+        let data = [];
+
+        this.page.components.forEach(component => {
+            let newDataObj = component.getData();
+            newDataObj.cmpId = component.cmpId;
+            newDataObj.cmpType = component.cmpType;
+
+            data.push(newDataObj);
+
+            component.components.forEach(nestedComponent => {
+                let nestedDataObj = nestedComponent.getData();
+                nestedDataObj.cmpId = nestedComponent.cmpId;
+                nestedDataObj.cmpType = nestedComponent.cmpType;
+
+                data.push(nestedDataObj);
+            });
+        });
+
+        return data;
+    }
+
+    pushStateUpdate() {
+        let data = this.getComponentData();
+
+        this.page.ace.io.send(JSON.stringify(data));
     }
 
     update(updateObj) {
@@ -39,6 +72,8 @@ class AceComponent {
     processEvent(eventName) {
         if (this.events[eventName]) {
             this.events[eventName](this);
+
+            this.pushStateUpdate();
         }
     }
 };

@@ -3,12 +3,13 @@ import ElementComponent from '../element.ace.component';
 const mjsPrefix = './components/elements/input/';
 
 class InputElementComponent extends ElementComponent {
-    constructor(value = "") {
+    constructor(labelText = '') {
         super();
 
-        this.value = value;
+        this.value = '';
         this.template = mjsPrefix + 'input-element.ace.component.pug';
         this.script = 'input-element.ace.component.client';
+        this.labelText = labelText;
     }
 
     setPassword(isPassword) {
@@ -21,6 +22,10 @@ class InputElementComponent extends ElementComponent {
 
     clear() {
         this.value = '';
+    }
+
+    setLabel(str) {
+        this.labelText = str;
     }
 };
 

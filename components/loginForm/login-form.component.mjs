@@ -9,10 +9,10 @@ class LoginForm extends AceComponent {
     constructor() {
         super();
 
-        this.usernameInput = new InputElementComponent();
+        this.usernameInput = new InputElementComponent('Username');
         this.usernameInput.placeholder = 'Username';
 
-        this.passwordInput = new InputElementComponent();
+        this.passwordInput = new InputElementComponent('Password');
         this.passwordInput.setPassword(true);
 
         this.loginButton = new ButtonElementComponent('Submit');
@@ -20,10 +20,16 @@ class LoginForm extends AceComponent {
             this.login();
         });
 
+        this.clearButton = new ButtonElementComponent('Clear');
+        this.clearButton.registerEvent('onclick', buttonComponent => {
+            this.clearForm();
+        });
+
         this.add(
             this.usernameInput,
             this.passwordInput,
-            this.loginButton
+            this.loginButton,
+            this.clearButton
         )
     }
 

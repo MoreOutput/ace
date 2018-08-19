@@ -5,10 +5,12 @@ import bodyParser from 'body-parser';
 
 class Ace {
     constructor(config) {
+        const ws = new WebSocket.Server({ port: 3001 });
+
         this.config = config;
         this.server = http.createServer();
         this.express = express();
-        this.io = new WebSocket.Server({ port: 3001 });
+        this.io;
         this.activePage;
 
         this.express.use(bodyParser.json());
@@ -21,7 +23,9 @@ class Ace {
             next();
         });
 
-        this.io.on('connection', (s) => {
+        ws.on('connection', (s) => {
+            this.io = s;
+
             s.on('message', (r) => {
                 r = JSON.parse(r);
 
@@ -34,9 +38,9 @@ class Ace {
 
     get(route, page) {
         this.express.get('/', (req, res) => {
-            page.render(req, res);
-
             this.activePage = page;
+
+            page.render(req, res, this);
         });
     }
 

@@ -3,10 +3,10 @@ import ElementComponent from '../element.ace.component';
 const mjsPrefix = './components/elements/button/';
 
 class ButtonElementComponent extends ElementComponent {
-    constructor(value = "") {
+    constructor(text = '') {
         super();
 
-        this.value = value;
+        this.text = text;
         this.template = mjsPrefix + 'button-element.ace.component.pug';
         this.script = 'button-element.ace.component.client';
     }
