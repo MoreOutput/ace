@@ -19,14 +19,14 @@ class AcePage {
     }
 
     beforeRender() {
-        let i = 0;
-
         this.setup();
 
         this.components.forEach(component => {
             if (component.script && this.clientScripts.indexOf(component.script) === -1) {
                 this.clientScripts.push(component.script);
             }
+
+            component.update(component);
         });
     }
 

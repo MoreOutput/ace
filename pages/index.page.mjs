@@ -8,8 +8,9 @@ class IndexPage extends AcePage {
 
     setup() {
         this.title = 'Test Index';
-        this.usernameInput = new InputElementComponent('Hello');
-        this.passwordInput = new InputElementComponent('Testing');
+        this.usernameInput = new InputElementComponent();
+        this.usernameInput.placeholder = 'Username';
+        this.passwordInput = new InputElementComponent();
 
         this.usernameInput.oninput = (component) => {
             console.log('New Value', component.value);
