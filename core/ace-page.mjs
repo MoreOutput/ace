@@ -5,9 +5,9 @@ const rootHeaderTemplate = './core/root-header.template.pug';
 const rootFooterTemplate = './core/root-footer.template.pug';
 
 class AcePage {
-    constructor(req, res) {
-        this.req = req;
-        this.res = res;
+    constructor() {
+        this.req;
+        this.res;
 
         this.title = 'Ace Page';
 
@@ -16,6 +16,7 @@ class AcePage {
     }
 
     add() {
+        console.log('adding', arguments.length);
         this.components = [...arguments];
     }
 
@@ -26,6 +27,14 @@ class AcePage {
             if (component.script && this.clientScripts.indexOf(component.script) === -1) {
                 this.clientScripts.push(component.script);
             }
+
+            component.components.forEach(nestedComponent => {
+                if (nestedComponent.script && this.clientScripts.indexOf(nestedComponent.script) === -1) {
+                    this.clientScripts.push(nestedComponent.script);
+                }
+
+                nestedComponent.update(nestedComponent);
+            });
 
             component.update(component);
         });
@@ -44,13 +53,22 @@ class AcePage {
         let i = 0;
 
         for (i; i < this.components.length; i += 1) {
-            baseTemplate += this.components[i].compile()(this.components[i]);
+            if (this.components[i].components.length > 0) {
+                this.components[i].components.forEach(component => {
+                    baseTemplate += component.compile()(component);
+                });
+            } else {
+                baseTemplate += this.components[i].compile()(this.components[i]);
+            }
         }
 
         return headerTemplate + baseTemplate + footerTemplate;
     }
 
-    render() {
+    render(req, res) {
+        this.req = req;
+        this.res = res;
+
         this.beforeRender();
 
         this.res.type('text/html');
@@ -62,9 +80,15 @@ class AcePage {
         let result;
 
         this.components.forEach(component => {
-            if (component.cmpId === id) {
+            if (component.cmpId === id && !result) {
                 result = component;
             }
+
+            component.components.forEach(nestedComponent => {
+                if (nestedComponent.cmpId === id && !result) {
+                    result = nestedComponent;
+                }
+            });
         });
 
         return result;

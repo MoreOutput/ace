@@ -1,16 +1,16 @@
 (() => {
-    const cmpType = 'InputElementComponent';
+    const cmpType = 'ButtonElementComponent';
     const attrName = 'data-ace-' + cmpType;
     let nodes = document.querySelectorAll('[' + attrName + ']');
 
     nodes.forEach(element => {
         const id = element.getAttribute(attrName);
 
-        element.oninput = (evt) => {
+        element.onclick = (evt) => {
             document.socket.send(JSON.stringify({
                 cmpId: id,
                 value: element.value,
-                event: 'oninput'
+                event: 'onclick'
             }));
         };
     });

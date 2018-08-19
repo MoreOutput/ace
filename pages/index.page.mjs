@@ -1,5 +1,5 @@
-import AcePage from "../core/ace-page";
-import InputElementComponent from "../components/elements/input/input-element.ace.component";
+import AcePage from '../core/ace-page';
+import LoginForm from '../components/loginForm/login-form.component';
 
 class IndexPage extends AcePage {
     constructor(req, res) {
@@ -8,18 +8,10 @@ class IndexPage extends AcePage {
 
     setup() {
         this.title = 'Test Index';
-        this.usernameInput = new InputElementComponent();
-        this.usernameInput.placeholder = 'Username';
-        this.passwordInput = new InputElementComponent();
+        
+        this.form = new LoginForm();
 
-        this.usernameInput.oninput = (component) => {
-            console.log('New Value', component.value);
-        };
-
-        this.add(
-            this.usernameInput,
-            this.passwordInput
-        );
+        this.add(this.form);
     }
 };
 

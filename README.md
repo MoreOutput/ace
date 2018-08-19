@@ -1,6 +1,13 @@
 # Ace
 
-Example Page:
+```js
+    import Ace from './core/ace';
+    import IndexPage from './pages/index.page';
+
+    const ace = new Ace({port: 3000});
+
+    ace.get('/', new IndexPage());
+```
 
 ```js
 import AcePage from "../core/ace-page";
@@ -13,17 +20,15 @@ class IndexPage extends AcePage {
 
     setup() {
         this.title = 'Test Index';
-        this.usernameInput = new InputElementComponent();
-        this.usernameInput.placeholder = 'Username';
-        this.passwordInput = new InputElementComponent();
+        this.firstName = new InputElementComponent();
+        this.firstName.placeholder = 'Username';
 
-        this.usernameInput.oninput = (component) => {
-            console.log('New Value', component.value);
+        this.firstName.oninput = (component) => {
+            console.log('New First Name', component.value);
         };
 
         this.add(
-            this.usernameInput,
-            this.passwordInput
+            this.firstName,
         );
     }
 };

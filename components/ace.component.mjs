@@ -4,9 +4,16 @@ class AceComponent {
     constructor() {
         this.cmpId = this.generateId();
         this.cmpType = this.constructor.name;
-        this.script = "";
-        this.template = "";
+        this.script = '';
+        this.template = '';
+        this.events = {};
         this.markup;
+        this.pug = pug;
+        this.components = [];
+    }
+
+    add() {
+        this.components = [...arguments];
     }
 
     compile() {
@@ -22,6 +29,16 @@ class AceComponent {
             if (this[prop] !== undefined) {
                 this[prop] = updateObj[prop];
             }
+        }
+    }
+
+    registerEvent(eventName, callback) {
+        this.events[eventName] = callback;
+    }
+
+    processEvent(eventName) {
+        if (this.events[eventName]) {
+            this.events[eventName](this);
         }
     }
 };
