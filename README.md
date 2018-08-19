@@ -14,8 +14,8 @@ import AcePage from "../core/ace-page";
 import InputElementComponent from "../components/elements/input/input-element.ace.component";
 
 class IndexPage extends AcePage {
-    constructor(req, res) {
-        super(req, res);
+    constructor() {
+        super();
     }
 
     setup() {

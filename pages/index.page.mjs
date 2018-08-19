@@ -2,8 +2,8 @@ import AcePage from '../core/ace-page';
 import LoginForm from '../components/loginForm/login-form.component';
 
 class IndexPage extends AcePage {
-    constructor(req, res) {
-        super(req, res);
+    constructor() {
+        super();
     }
 
     setup() {
