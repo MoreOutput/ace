@@ -1,7 +1,7 @@
 (() => {
     const cmpType = 'InputElementComponent';
     const attrName = 'data-ace-' + cmpType;
-    let nodes = document.querySelectorAll('[' + attrName + ']');
+    let nodes = document.querySelectorAll('input[' + attrName + ']');
 
     console.log(nodes);
 

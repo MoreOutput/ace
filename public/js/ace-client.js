@@ -5,7 +5,9 @@
 		r = JSON.parse(r.data);
 
 		if (r.route) {
+			console.log('Routing Object', r.route);
 			window.history.pushState(r.route.data, r.route.title, r.route.url);
+			document.title = r.route.title;
 		}
 
 		if (r.length) {
@@ -27,7 +29,7 @@
 						}
 					}
 				} else {
-
+					console.warn('Ace node not found', attrName);
 				}
 			}
 		}

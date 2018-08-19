@@ -76,6 +76,16 @@ class AceComponent {
             this.pushStateUpdate();
         }
     }
+
+    redirect(route) {
+        this.page.ace.io.send(JSON.stringify({
+            route: {
+                url: route,
+                data: {},
+                title: 'Routing'
+            },
+        }));
+    }
 };
 
 export default AceComponent;

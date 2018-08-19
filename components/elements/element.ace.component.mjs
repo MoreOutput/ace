@@ -27,7 +27,7 @@ class ElementComponent extends AceComponent {
             'id',
             'text',
             'class',
-            'labelTest'
+            'labelText'
         ]
     }
 };

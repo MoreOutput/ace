@@ -1,7 +1,7 @@
 (() => {
-    const cmpType = 'DivElementComponent';
+    const cmpType = 'ButtonElementComponent';
     const attrName = 'data-ace-' + cmpType;
-    let nodes = document.querySelectorAll('div[' + attrName + ']');
+    let nodes = document.querySelectorAll('button[' + attrName + ']');
 
     nodes.forEach(element => {
         const id = element.getAttribute(attrName);

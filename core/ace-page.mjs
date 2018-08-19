@@ -2,7 +2,6 @@ import pug from 'pug';
 
 const rootTemplate = './core/root.template.pug';
 const rootHeaderTemplate = './core/root-header.template.pug';
-const rootComponentTemplate = './core/root-component.template.pug';
 const rootFooterTemplate = './core/root-footer.template.pug';
 
 class AcePage {
@@ -46,6 +45,47 @@ class AcePage {
         });
     }
 
+    compileComponent(component) {
+        if (!component.template) {
+            return '<span data-ace-' + component.cmpType + '="' + component.cmpId + '">';
+        } else {
+            return component.compile()(component);
+        }
+    }
+
+    compileComponentRescursive(component) {
+        let resultStr = '';
+        let wrapperStr = '';
+    
+        if (component.components.length) {
+            component.components.forEach(nestedComponent => {
+                resultStr += this.compileComponent(nestedComponent);
+
+                if (nestedComponent.components.length > 0) {
+                    let wrapperRegEx = /(<\/.*?>)/;
+                    let match = wrapperRegEx.exec(resultStr)[0];
+
+                    wrapperStr = match;
+
+                    resultStr = resultStr.replace(match, '');
+                    
+                    resultStr += this.compileComponentRescursive(nestedComponent) + wrapperStr;
+                }
+
+                if (!component.template) {
+                    wrapperStr = '</span>';
+                }
+            });
+        }
+
+        if (!component.template) {
+            resultStr += '</span>'
+        }
+
+        return resultStr;
+    }
+
+
     compile() {
         let headerTemplate = pug.compileFile(rootHeaderTemplate)({
             title: this.title
@@ -59,46 +99,12 @@ class AcePage {
         let i = 0;
 
         for (i; i < this.components.length; i += 1) {
-            if (this.components[i].components.length > 0) {
-                let cmpTemplate;
+            let component = this.components[i];
 
-                if (!this.components[i].template) {
-                    cmpTemplate = pug.compileFile(rootComponentTemplate)({
-                        cmpId: this.components[i].cmpId,
-                        cmpType: this.components[i].cmpType,
-                        template: ''
-                    });
-                } else {
-                    cmpTemplate = pug.compileFile(rootComponentTemplate)({
-                        cmpId: this.components[i].cmpId,
-                        cmpType: this.components[i].cmpType,
-                        template: this.components[i].compile()(this.components[i])
-                    });
-                }
-
-                baseTemplate += cmpTemplate;
-
-                this.components[i].components.forEach(component => {
-                    if (!component.template) {
-                        cmpTemplate = pug.compileFile(rootComponentTemplate)({
-                            cmpId: component.cmpId,
-                            cmpType: component.cmpType,
-                            template: component.compile()(component)
-                        });
-
-                        baseTemplate += cmpTemplate;
-                    } else {
-                        baseTemplate += component.compile()(component);
-                    }
-                });
+            if (component.components.length > 0) {
+                baseTemplate += this.compileComponentRescursive(component);
             } else {
-                let cmpTemplate = pug.compileFile(rootComponentTemplate)({
-                    cmpId: component.cmpId,
-                    cmpType: component.cmpType,
-                    template: this.components[i].compile()(component)
-                });
-
-                baseTemplate += cmpTemplate;
+                baseTemplate += this.compileComponentRescursive(component);
             }
         }
 

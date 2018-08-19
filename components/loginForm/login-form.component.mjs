@@ -2,12 +2,14 @@ import AceComponent from '../ace.component';
 
 import InputElementComponent from '../elements/input/input-element.ace.component';
 import ButtonElementComponent from '../elements/button/button-element.ace.component';
+import DivElementComponent from '../elements/div/div-element.ace.component';
 
 const mjsPrefix = './components/elements/form/';
 
 class LoginForm extends AceComponent {
     constructor() {
         super();
+        this.alertDiv = new DivElementComponent();
 
         this.usernameInput = new InputElementComponent('Username');
         this.usernameInput.placeholder = 'Username';
@@ -26,6 +28,7 @@ class LoginForm extends AceComponent {
         });
 
         this.add(
+            this.alertDiv,
             this.usernameInput,
             this.passwordInput,
             this.loginButton,
@@ -34,12 +37,14 @@ class LoginForm extends AceComponent {
     }
 
     clearForm() {
+        this.alertDiv.text = 'Fields Cleared';
+
         this.usernameInput.clear();
         this.passwordInput.clear();
     }
 
     login() {
-        console.log('Default Login');
+        this.redirect(`/dashboard?username=${this.usernameInput.value}`);
     }
 };
 
