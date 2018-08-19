@@ -1,6 +1,7 @@
 import pug from 'pug';
 
 const rootTemplate = './core/root.template.pug';
+const rootHeaderTemplate = './core/root-header.template.pug';
 const rootFooterTemplate = './core/root-footer.template.pug';
 
 class AcePage {
@@ -31,6 +32,9 @@ class AcePage {
     }
 
     compile() {
+        let headerTemplate = pug.compileFile(rootHeaderTemplate)({
+            title: this.title
+        });
         let baseTemplate = pug.compileFile(rootTemplate)({
             title: this.title
         });
@@ -43,7 +47,7 @@ class AcePage {
             baseTemplate += this.components[i].compile()(this.components[i]);
         }
 
-        return baseTemplate + footerTemplate;
+        return headerTemplate + baseTemplate + footerTemplate;
     }
 
     render() {

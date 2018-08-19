@@ -30,3 +30,5 @@ class IndexPage extends AcePage {
 
 export default IndexPage;
 ```
+
+Run with: node --experimental-modules app.mjs
