@@ -1,11 +1,15 @@
 import pug from 'pug';
 
+import AceComponent from './ace.component';
+
 const rootTemplate = './core/root.template.pug';
 const rootHeaderTemplate = './core/root-header.template.pug';
 const rootFooterTemplate = './core/root-footer.template.pug';
 
-class AcePage {
+class AcePage extends AceComponent {
     constructor() {
+        super();
+
         this.req;
         this.res;
         this.ace;
@@ -14,17 +18,14 @@ class AcePage {
 
         this.components = [];
         this.clientScripts = [];
-    }
-
-    add() {
-        console.log('adding', arguments.length);
-        this.components = [...arguments];
+        this.clientLinks = [];
     }
 
     beforeRender() {
         this.setup();
 
         this.components.forEach(component => {
+
             if (component.script && this.clientScripts.indexOf(component.script) === -1) {
                 this.clientScripts.push(component.script);
             }
@@ -34,7 +35,14 @@ class AcePage {
                     this.clientScripts.push(nestedComponent.script);
                 }
 
+                if (nestedComponent.link && this.clientLinks.indexOf(nestedComponent.link) === -1) {
+                    this.clientLinks.push(nestedComponent.link);
+                }
+
                 nestedComponent.page = this;
+                nestedComponent.parent = component;
+
+                nestedComponent.setup();
 
                 nestedComponent.update(nestedComponent);
             });
@@ -49,37 +57,48 @@ class AcePage {
         if (!component.template) {
             return '<span data-ace-' + component.cmpType + '="' + component.cmpId + '">';
         } else {
-            return component.compile()(component);
+            let dataMap = component.getPugMap(component.getData());
+
+            return component.compile()({
+                dataMap: dataMap
+            });
         }
     }
 
     compileComponentRescursive(component) {
         let resultStr = '';
         let wrapperStr = '';
-    
+
         if (component.components.length) {
+            resultStr += this.compileComponent(component);
+
+            if (!component.template) {
+                wrapperStr = '</span>';
+            } else {
+                let wrapperRegEx = /(<\/.*?>)/;
+                const matches = wrapperRegEx.exec(resultStr);
+                const match = matches[0];
+
+                wrapperStr = match;
+
+                resultStr = resultStr.replace(wrapperStr, '');
+            }
+
             component.components.forEach(nestedComponent => {
-                resultStr += this.compileComponent(nestedComponent);
-
                 if (nestedComponent.components.length > 0) {
-                    let wrapperRegEx = /(<\/.*?>)/;
-                    let match = wrapperRegEx.exec(resultStr)[0];
-
-                    wrapperStr = match;
-
-                    resultStr = resultStr.replace(match, '');
-                    
-                    resultStr += this.compileComponentRescursive(nestedComponent) + wrapperStr;
-                }
-
-                if (!component.template) {
-                    wrapperStr = '</span>';
+                    resultStr += this.compileComponentRescursive(nestedComponent);
+                } else {
+                    resultStr += this.compileComponent(nestedComponent);
                 }
             });
-        }
 
-        if (!component.template) {
-            resultStr += '</span>'
+            resultStr += wrapperStr;
+        } else {
+            resultStr += this.compileComponent(component);
+            
+            if (!component.template) {
+                resultStr += '</span>'
+            }
         }
 
         return resultStr;
@@ -94,6 +113,7 @@ class AcePage {
             title: this.title
         });
         let footerTemplate = pug.compileFile(rootFooterTemplate)({
+            links: this.clientLinks,
             scripts: this.clientScripts
         });
         let i = 0;
@@ -116,29 +136,14 @@ class AcePage {
         this.res = res;
         this.ace = ace;
 
+        this.components = [];
+
         this.beforeRender();
 
         this.res.type('text/html');
         this.res.status(200);
+
         this.res.send(this.compile());
-    }
-
-    getComponentById(id) {
-        let result;
-
-        this.components.forEach(component => {
-            if (component.cmpId === id && !result) {
-                result = component;
-            }
-
-            component.components.forEach(nestedComponent => {
-                if (nestedComponent.cmpId === id && !result) {
-                    result = nestedComponent;
-                }
-            });
-        });
-
-        return result;
     }
 };
 

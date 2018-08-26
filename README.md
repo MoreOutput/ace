@@ -4,12 +4,11 @@
 
 ```js
     import Ace from './core/ace';
-    import IndexPage from './pages/index.page';
 
-    const ace = new Ace({port: 3000});
+    new Ace({port: 3000});
 
-    ace.get('/', new IndexPage());
 ```
+
 ## Custom Page
 
 ```js
@@ -24,7 +23,6 @@ class IndexPage extends AcePage {
     setup() {
         this.title = 'Test Index';
         this.form = new LoginForm();
-
         this.add(this.form);
     }
 };
@@ -47,7 +45,9 @@ const mjsPrefix = './components/elements/form/';
 class LoginForm extends AceComponent {
     constructor() {
         super();
-        this.alertDiv = new DivElementComponent('foo');
+
+        this.alertDiv = new DivElementComponent();
+        this.alertDiv.class = 'ace-alert';
 
         this.usernameInput = new InputElementComponent('Username');
         this.usernameInput.placeholder = 'Username';
@@ -56,12 +56,12 @@ class LoginForm extends AceComponent {
         this.passwordInput.setPassword(true);
 
         this.loginButton = new ButtonElementComponent('Submit');
-        this.loginButton.registerEvent('onclick', buttonComponent => {
+        this.loginButton.addEvent('onclick', buttonComponent => {
             this.login();
         });
 
         this.clearButton = new ButtonElementComponent('Clear');
-        this.clearButton.registerEvent('onclick', buttonComponent => {
+        this.clearButton.addEvent('onclick', buttonComponent => {
             this.clearForm();
         });
 
@@ -71,22 +71,36 @@ class LoginForm extends AceComponent {
             this.passwordInput,
             this.loginButton,
             this.clearButton
-        )
+        );
     }
 
     clearForm() {
         this.alertDiv.text = 'Fields Cleared';
-
         this.usernameInput.clear();
         this.passwordInput.clear();
     }
 
     login() {
-        this.redirect(`/dashboard?username=${this.userNameInput.value}`);
+        this.redirect(`/dashboard?username=${this.usernameInput.value}`);
     }
 };
 
 export default LoginForm;
+```
+
+An example of wrapping an exisiting web component: (install vaadin-text-field with bower):
+
+
+```js
+import VaadinTextField from '../vaadinTextField/vaadin-text-field.component';
+
+        this.vaadinField = new VaadinTextField('البادئة و اللاحقة');
+        this.vaadinField.required = true;
+        this.vaadinField.maxlength = 2;
+        this.vaadinField.setPreventValidInput(true);
+        this.vaadinField.setErrorMessage('Error message');
+        this.vaadinField.pattern = '[0-9]';
+        this.vaadinField.setPrefix('$');
 ```
 
 Run with: node --experimental-modules app.mjs

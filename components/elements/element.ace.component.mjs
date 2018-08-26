@@ -1,33 +1,30 @@
-import AceComponent from '../ace.component';
+import AceComponent from '../../core/ace.component';
+
+const mjsPrefix = './components/elements/';
 
 class ElementComponent extends AceComponent {
-    constructor() {
+    constructor(element = '') {
         super();
-    }
 
-    getData() {
-        let result = {};
-        let prop;
-        let valueMap = this.getDataMap();
-
-        for (prop in this) {
-            if (typeof this[prop] !== 'function' && valueMap.indexOf(prop) !== -1) {
-                result[prop] = this[prop];
-            }
-        }
-
-        return result;
+        this.element = element;
+        this.template = mjsPrefix + 'element.ace.component.pug';
+        this.script = 'button-element.ace.component.client';
+        this.handlerFile = 'ace-element.handler';
     }
 
     getDataMap() {
         return [
+            'element',
             'value',
             'type',
             'style',
             'id',
             'text',
             'class',
-            'labelText'
+            'labelText',
+            'placeholder',
+            'dir',
+            'slot'
         ]
     }
 };

@@ -3,8 +3,6 @@
     const attrName = 'data-ace-' + cmpType;
     let nodes = document.querySelectorAll('input[' + attrName + ']');
 
-    console.log(nodes);
-
     nodes.forEach(element => {
         const id = element.getAttribute(attrName);
 

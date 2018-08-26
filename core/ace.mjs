@@ -2,6 +2,7 @@ import http from 'http';
 import WebSocket from 'ws';
 import express from 'express';
 import bodyParser from 'body-parser';
+import IndexPage from '../pages/index.page';
 
 class Ace {
     constructor(config) {
@@ -15,6 +16,7 @@ class Ace {
 
         this.express.use(bodyParser.json());
         this.express.use('/js',express.static('public/js'));
+        this.express.use('/polymer',express.static('bower_components'));
 
         // local development
         this.express.use((req, res, next) => {
@@ -33,14 +35,18 @@ class Ace {
             });
         });
 
+        console.log('Booting Ace Server');
+
+        this.get();
+
         this.express.listen(this.config.port);
     }
 
     get(route, page) {
         this.express.get('/', (req, res) => {
-            this.activePage = page;
+            this.activePage = new IndexPage();
 
-            page.render(req, res, this);
+            return this.activePage.render(req, res, this);
         });
     }
 
