@@ -6,8 +6,6 @@ import ButtonElementComponent from '../elements/button/button-element.ace.compon
 import DivElementComponent from '../elements/div/div-element.ace.component';
 import VaadinTextField from '../vaadinTextField/vaadin-text-field.component';
 
-const mjsPrefix = './components/elements/form/';
-
 class LoginForm extends AceComponent {
     constructor() {
         super();

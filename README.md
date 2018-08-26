@@ -40,8 +40,6 @@ import InputElementComponent from '../elements/input/input-element.ace.component
 import ButtonElementComponent from '../elements/button/button-element.ace.component';
 import DivElementComponent from '../elements/div/div-element.ace.component';
 
-const mjsPrefix = './components/elements/form/';
-
 class LoginForm extends AceComponent {
     constructor() {
         super();
