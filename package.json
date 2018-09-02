@@ -1,6 +1,6 @@
 {
-  "name": "ace",
-  "version": "0.0.1",
+  "name": "ace-framework",
+  "version": "0.0.3",
   "dependencies": {
     "body-parser": "1.18.3",
     "commander": "2.15.1",
