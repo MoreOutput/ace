@@ -1,5 +1,6 @@
 {
-  "name": "ace-framework",
+  "name": "ace",
+  "version": "0.0.1",
   "dependencies": {
     "body-parser": "1.18.3",
     "commander": "2.15.1",
@@ -8,12 +9,11 @@
     "pug": "^2.0.3",
     "ws": "^6.0.0"
   },
-  "version": "0.0.1",
   "engines": {
     "node": ">= 8.11.1"
   },
   "description": "",
-  "main": "app.js",
+  "main": "ace.jsm",
   "devDependencies": {},
   "keywords": []
 }

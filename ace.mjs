@@ -3,17 +3,18 @@ import WebSocket from 'ws';
 import express from 'express';
 import session from 'express-session';
 import bodyParser from 'body-parser';
-import Pages from '../pages/page.index';
 
 const PAGE_CACHE = {
     // sessionId : {active: page, 'route': page, ...}
 };
+const Pages;
 
 class Ace {
-    constructor(config) {
+    constructor(pages) {
+        Pages = pages;
+
         const ws = new WebSocket.Server({ port: 3001 });
 
-        this.config = config;
         this.server = http.createServer();
         this.express = express();
         this.io;

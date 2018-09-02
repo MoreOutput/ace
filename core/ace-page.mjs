@@ -17,6 +17,7 @@ class AcePage extends AceComponent {
         this.title = 'Ace Page';
 
         this.components = [];
+        this.clientStyles = [];
         this.clientScripts = [];
         this.clientLinks = [];
     }
@@ -30,9 +31,17 @@ class AcePage extends AceComponent {
                 this.clientScripts.push(component.script);
             }
 
+            if (component.styles) {
+                this.clientStyles.push(component.styles);
+            }
+
             component.components.forEach(nestedComponent => {
                 if (nestedComponent.script && this.clientScripts.indexOf(nestedComponent.script) === -1) {
                     this.clientScripts.push(nestedComponent.script);
+                }
+
+                if (nestedComponent.styles && this.clientStyles.indexOf(nestedComponent.styles) === -1) {
+                    this.clientStyles.push(nestedComponent.styles);
                 }
 
                 if (nestedComponent.link && this.clientLinks.indexOf(nestedComponent.link) === -1) {
@@ -107,7 +116,8 @@ class AcePage extends AceComponent {
 
     compile() {
         let headerTemplate = pug.compileFile(rootHeaderTemplate)({
-            title: this.title
+            title: this.title,
+            styles: this.clientStyles
         });
         let baseTemplate = pug.compileFile(rootTemplate)({
             title: this.title
@@ -154,6 +164,12 @@ class AcePage extends AceComponent {
                 title: 'Routing'
             },
         }));
+    }
+
+    addStyle(stylePath) {
+        if (this.clientStyles.indexOf(stylePath) === -1) {
+            this.clientStyles.push(stylePath);
+        }
     }
 };
 
