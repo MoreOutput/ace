@@ -1,4 +1,5 @@
 import http from 'http';
+import path from 'path';
 import WebSocket from 'ws';
 import express from 'express';
 import session from 'express-session';
@@ -14,14 +15,16 @@ class Ace {
         Pages = pages;
 
         const ws = new WebSocket.Server({ port: 3001 });
+        const rootURL = this.getDir(import.meta.url).replace('core', '');
 
         this.server = http.createServer();
         this.express = express();
         this.io;
         this.config = config;
         this.express.use(bodyParser.json());
-        this.express.use('/js',express.static('public/js'));
-        this.express.use('/polymer',express.static('bower_components'));
+        console.log(rootURL);
+        this.express.use('/js', express.static(rootURL + '/public/js'));
+        this.express.use('/polymer', express.static(rootURL + '/bower_components'));
         this.express.use(session({
             secret: 'h3sdgsp8223e23x234tgddxcxdfdsasdsG',
             resave: false,
@@ -99,6 +102,13 @@ class Ace {
             console.warn('Component Reference not found', r);
         }
     };
+
+    getDir(url) {
+        const moduleURL = new URL(url);
+        const __dirname = path.dirname(moduleURL.pathname).replace('/', '');
+
+        return __dirname;
+    }
 }
 
 export default Ace;

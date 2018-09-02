@@ -1,13 +1,13 @@
 import ElementComponent from '../element.ace.component';
 
-const mjsPrefix = './components/elements/button/';
-
 class ButtonElementComponent extends ElementComponent {
     constructor(text = '') {
         super();
 
+        const rootUrl = this.getDir(import.meta.url);
+
         this.text = text;
-        this.template = mjsPrefix + 'button-element.ace.component.pug';
+        this.template = rootUrl + '/button-element.ace.component.pug';
         this.script = 'button-element.ace.component.client';
     }
 };

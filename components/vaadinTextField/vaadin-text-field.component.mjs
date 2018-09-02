@@ -1,13 +1,14 @@
 import AceComponent from '../../core/ace.component';
 import DivElementComponent from '../elements/div/div-element.ace.component';
 
-const mjsPrefix = './components/vaadinTextField/';
-
 // https://vaadin.com/components/vaadin-text-field/html-examples/text-field-lumo-theme-demos
 class VaadinTextField extends AceComponent {
     constructor(label = '') {
         super();
-        this.template = mjsPrefix + 'vaadin-text-field.component.pug';
+
+        const rootUrl = this.getDir(import.meta.url);
+
+        this.template = rootUrl + '/vaadin-text-field.component.pug';
         this.link = 'vaadin-text-field/vaadin-text-field';
         this.handlerFile = 'vaadin.handler';
         this.label = label;

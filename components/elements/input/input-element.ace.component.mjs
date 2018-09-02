@@ -1,13 +1,13 @@
 import ElementComponent from '../element.ace.component';
 
-const mjsPrefix = './components/elements/input/';
-
 class InputElementComponent extends ElementComponent {
     constructor(labelText = '') {
         super();
 
+        const rootUrl = this.getDir(import.meta.url);
+
         this.value = '';
-        this.template = mjsPrefix + 'input-element.ace.component.pug';
+        this.template = rootUrl + '/input-element.ace.component.pug';
         this.script = 'input-element.ace.component.client';
         this.labelText = labelText;
     }

@@ -1,3 +1,4 @@
+import path from 'path';
 import pug from 'pug';
 
 class AceComponent {
@@ -153,6 +154,13 @@ class AceComponent {
         }
 
         return false;
+    }
+
+    getDir(url) {
+        const moduleURL = new URL(url);
+        const __dirname = path.dirname(moduleURL.pathname).replace('/', '');
+
+        return __dirname;
     }
 };
 
