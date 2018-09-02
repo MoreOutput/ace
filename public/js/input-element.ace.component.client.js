@@ -10,7 +10,8 @@
             document.socket.send(JSON.stringify({
                 cmpId: id,
                 value: element.value,
-                event: 'oninput'
+                event: 'oninput',
+                id: document.aceSessionId
             }));
         };
     });

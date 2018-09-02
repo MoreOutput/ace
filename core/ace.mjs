@@ -1,8 +1,13 @@
 import http from 'http';
 import WebSocket from 'ws';
 import express from 'express';
+import session from 'express-session';
 import bodyParser from 'body-parser';
-import IndexPage from '../pages/index.page';
+import Pages from '../pages/page.index';
+
+const PAGE_CACHE = {
+    // sessionId : {active: page, 'route': page, ...}
+};
 
 class Ace {
     constructor(config) {
@@ -12,16 +17,23 @@ class Ace {
         this.server = http.createServer();
         this.express = express();
         this.io;
-        this.activePage;
 
         this.express.use(bodyParser.json());
         this.express.use('/js',express.static('public/js'));
         this.express.use('/polymer',express.static('bower_components'));
-
-        // local development
+        this.express.use(session({
+            secret: 'h3sdgsp8223e23x234tgddxcxdfdsasdsG',
+            resave: false,
+            saveUninitialized: true
+        }));
         this.express.use((req, res, next) => {
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            // currently we dont cache, may be better to trigger active route update on a browser
+            // event related to history (loading from cache)
+            res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+            res.header('Expires', '-1');
+            res.header('Pragma', 'no-cache');
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
             next();
         });
 
@@ -35,27 +47,55 @@ class Ace {
             });
         });
 
-        console.log('Booting Ace Server');
-
-        this.get();
+        this.setupRoutes();
 
         this.express.listen(this.config.port);
     }
 
-    get(route, page) {
-        this.express.get('/', (req, res) => {
-            this.activePage = new IndexPage();
+    setupRoutes(route) {
+        let prop;
+        let i = 0;
 
-            return this.activePage.render(req, res, this);
+        this.express.get('/get-ace-sessionid', (req, res) => {
+            return res.json({id: req.sessionID});
         });
+
+        for (prop in Pages) {
+            let page = Pages[prop];
+
+            if (page.route) {
+                this.express.get(page.route, (req, res) => {
+                    let activePage;
+
+                    if (!PAGE_CACHE[req.sessionID]) {
+                        PAGE_CACHE[req.sessionID] = {};
+                    }
+
+                    if (!PAGE_CACHE[req.sessionID][page.route]) {
+                        PAGE_CACHE[req.sessionID][page.route] = new page.page(page.route);
+
+                        PAGE_CACHE[req.sessionID].active = PAGE_CACHE[req.sessionID][page.route];
+                    } else {
+                        PAGE_CACHE[req.sessionID].active = PAGE_CACHE[req.sessionID][page.route];
+                    }
+
+                    return PAGE_CACHE[req.sessionID].active.render(req, res, this);
+                });
+            }
+        }
     }
 
     processReponse(r) {
-        let component = this.activePage.getComponentById(r.cmpId);
-        component.update(r);
-    
-        if (r.event) {
-            component.processEvent(r.event);
+        let component = PAGE_CACHE[r.id].active.getComponentById(r.cmpId);
+
+        if (component) {
+            component.update(r);
+        
+            if (r.event) {
+                component.processEvent(r.event);
+            }
+        } else {
+            console.warn('Component Reference not found', r);
         }
     };
 }

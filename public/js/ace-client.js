@@ -10,6 +10,13 @@
 			});
 		}
 	};
+	const idReq = new Request('/get-ace-sessionid');
+
+	fetch(idReq).then((r) => {
+		return r.json();
+	}).then(r => {
+		document.aceSessionId = r.id;
+	});
 
 	ws.addEventListener('message', function(r) {
 		r = JSON.parse(r.data);
@@ -17,9 +24,7 @@
 		console.log(r);
 
 		if (r.route) {
-			window.history.pushState(r.route.data, r.route.title, r.route.url);
-
-			document.title = r.route.title;
+			return window.location.href = r.route.url;
 		}
 
 		if (r.length) {

@@ -9,7 +9,8 @@
         element.onclick = (evt) => {
             document.socket.send(JSON.stringify({
                 cmpId: id,
-                event: 'onclick'
+                event: 'onclick',
+                id: document.aceSessionId
             }));
         };
     });

@@ -16,7 +16,7 @@ class InputElementComponent extends ElementComponent {
         if (isPassword) {
             this.type = 'password';
         } else {
-            this.type = '';
+            this.type = 'text';
         }
     }
 

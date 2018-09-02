@@ -7,13 +7,13 @@ const rootHeaderTemplate = './core/root-header.template.pug';
 const rootFooterTemplate = './core/root-footer.template.pug';
 
 class AcePage extends AceComponent {
-    constructor() {
+    constructor(route = '') {
         super();
 
         this.req;
         this.res;
         this.ace;
-
+        this.route = route;
         this.title = 'Ace Page';
 
         this.components = [];
@@ -144,6 +144,16 @@ class AcePage extends AceComponent {
         this.res.status(200);
 
         this.res.send(this.compile());
+    }
+
+    redirect(route) {
+        this.ace.io.send(JSON.stringify({
+            route: {
+                url: route,
+                data: {},
+                title: 'Routing'
+            },
+        }));
     }
 };
 
