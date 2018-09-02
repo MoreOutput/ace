@@ -7,10 +7,10 @@ import bodyParser from 'body-parser';
 const PAGE_CACHE = {
     // sessionId : {active: page, 'route': page, ...}
 };
-const Pages;
+let Pages;
 
 class Ace {
-    constructor(pages) {
+    constructor(pages, config = {port: 3000}) {
         Pages = pages;
 
         const ws = new WebSocket.Server({ port: 3001 });
@@ -18,7 +18,7 @@ class Ace {
         this.server = http.createServer();
         this.express = express();
         this.io;
-
+        this.config = config;
         this.express.use(bodyParser.json());
         this.express.use('/js',express.static('public/js'));
         this.express.use('/polymer',express.static('bower_components'));
