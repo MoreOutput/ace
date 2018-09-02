@@ -1,10 +1,7 @@
 import pug from 'pug';
 
 import AceComponent from './ace.component';
-
-const rootTemplate = './core/root.template.pug';
-const rootHeaderTemplate = './core/root-header.template.pug';
-const rootFooterTemplate = './core/root-footer.template.pug';
+import path from 'path';
 
 class AcePage extends AceComponent {
     constructor(route = '') {
@@ -12,9 +9,15 @@ class AcePage extends AceComponent {
 
         this.req;
         this.res;
-        this.ace;
+        this.ace; 
         this.route = route;
         this.title = 'Ace Page';
+
+        const rootUrl = this.getDir(import.meta.url);
+
+        this.rootTemplate =  rootUrl + '/root.template.pug';
+        this.rootHeaderTemplate = rootUrl + '/root-header.template.pug';
+        this.rootFooterTemplate = rootUrl + '/root-footer.template.pug';
 
         this.components = [];
         this.clientStyles = [];
@@ -115,14 +118,14 @@ class AcePage extends AceComponent {
 
 
     compile() {
-        let headerTemplate = pug.compileFile(rootHeaderTemplate)({
+        let headerTemplate = pug.compileFile(this.rootHeaderTemplate)({
             title: this.title,
             styles: this.clientStyles
         });
-        let baseTemplate = pug.compileFile(rootTemplate)({
+        let baseTemplate = pug.compileFile(this.rootTemplate)({
             title: this.title
         });
-        let footerTemplate = pug.compileFile(rootFooterTemplate)({
+        let footerTemplate = pug.compileFile(this.rootFooterTemplate)({
             links: this.clientLinks,
             scripts: this.clientScripts
         });

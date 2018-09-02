@@ -4,6 +4,7 @@ import WebSocket from 'ws';
 import express from 'express';
 import session from 'express-session';
 import bodyParser from 'body-parser';
+import fs from 'fs';
 
 const PAGE_CACHE = {
     // sessionId : {active: page, 'route': page, ...}
@@ -15,16 +16,16 @@ class Ace {
         Pages = pages;
 
         const ws = new WebSocket.Server({ port: 3001 });
-        const rootURL = this.getDir(import.meta.url).replace('core', '');
-
+        
+        this.rootURL = this.getDir(import.meta.url).replace('core', '');
         this.server = http.createServer();
         this.express = express();
         this.io;
         this.config = config;
         this.express.use(bodyParser.json());
-        console.log(rootURL);
-        this.express.use('/js', express.static(rootURL + '/public/js'));
-        this.express.use('/polymer', express.static(rootURL + '/bower_components'));
+        this.express.use('/styles', express.static(this.rootURL + '/public/styles'));
+        this.express.use('/js', express.static(this.rootURL + '/public/js'));
+        this.express.use('/polymer', express.static(this.rootURL + '/bower_components'));
         this.express.use(session({
             secret: 'h3sdgsp8223e23x234tgddxcxdfdsasdsG',
             resave: false,
@@ -51,9 +52,28 @@ class Ace {
             });
         });
 
-        this.setupRoutes();
+        this.setupAce(() => {
+            this.setupRoutes();
+        });
 
         this.express.listen(this.config.port);
+    }
+
+    setupAce(callback) {
+        const source = this.rootURL + '../../components';
+
+        if (fs.lstatSync(source).isDirectory() ) {
+            const files = fs.readdirSync(source);
+
+            files.forEach(( file ) => {
+                if (fs.lstatSync(source + '/' + file).isDirectory() ) {
+                    this.copyResources(source + '/' + file, this.rootURL + 'public/styles', '.css')
+                    this.copyResources(source + '/' + file, this.rootURL + 'public/js', '.js')
+                }
+            });
+        }
+
+        callback();
     }
 
     setupRoutes(route) {
@@ -102,6 +122,42 @@ class Ace {
             console.warn('Component Reference not found', r);
         }
     };
+
+    copyFile( source, target ) {
+        let targetFile = target;
+    
+        if (fs.existsSync(target)) {
+            if (fs.lstatSync(target).isDirectory()) {
+                targetFile = path.join( target, path.basename( source ) );
+            }
+        }
+
+        fs.writeFileSync(targetFile, fs.readFileSync(source));
+    }
+
+    copyResources(source, target, fileType = '') {
+        let files = [];
+    
+        if (!fs.existsSync(target)) {
+            fs.mkdirSync(target);
+        }
+    
+        if (fs.lstatSync(source).isDirectory() ) {
+            files = fs.readdirSync(source);
+    
+            files.forEach(( file ) => {
+                if (file.indexOf(fileType) !== -1) {
+                    const curSource = path.join(source, file);
+    
+                    if (fs.lstatSync(curSource).isDirectory()) {
+                        this.copyDir(curSource, target);
+                    } else {
+                        this.copyFile(curSource, target);
+                    }
+                }
+            });
+        }
+    }
 
     getDir(url) {
         const moduleURL = new URL(url);

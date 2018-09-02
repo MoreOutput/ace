@@ -1,18 +1,32 @@
 # Ace
 
-## Initializing Route
+Install with:
 
 ```js
-    import Ace from './core/ace';
+npm install ace-framework
+```
 
-    new Ace({port: 3000});
+## App File Setup (define at app root, /)
+
+```js
+import { Ace } from 'ace-framework';
+
+import IndexPage from './pages/login.page';
+
+new Ace({
+    indexPage: {
+        page: IndexPage,
+        route: '/'
+    }
+});
 
 ```
 
-## Custom Page
+## Custom Page (define in dir named /pages)
 
 ```js
-import AcePage from '../core/ace-page';
+import { AcePage } from 'ace-framework';
+
 import LoginForm from '../components/loginForm/login-form.component';
 
 class IndexPage extends AcePage {
@@ -31,14 +45,16 @@ export default IndexPage;
 
 ```
 
-## Custom Component
+## Custom Component (define in dir named /components)
 
 ```js
-import AceComponent from '../ace.component';
 
-import InputElementComponent from '../elements/input/input-element.ace.component';
-import ButtonElementComponent from '../elements/button/button-element.ace.component';
-import DivElementComponent from '../elements/div/div-element.ace.component';
+import {
+    AceComponent,
+    InputElementComponent
+    ButtonElementComponent,
+    DivElementComponent
+} from 'ace-framework';
 
 class LoginForm extends AceComponent {
     constructor() {
@@ -86,8 +102,7 @@ class LoginForm extends AceComponent {
 export default LoginForm;
 ```
 
-An example of wrapping an exisiting web component: (install vaadin-text-field with bower):
-
+View the included VaadinTextField component to see how to create an ace component from existing web components.
 
 ```js
 import VaadinTextField from '../vaadinTextField/vaadin-text-field.component';
