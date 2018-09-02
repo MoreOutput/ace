@@ -13,7 +13,7 @@
     "node": ">= 8.11.1"
   },
   "description": "",
-  "main": "ace.jsm",
+  "main": "index.mjs",
   "devDependencies": {},
   "keywords": []
 }
