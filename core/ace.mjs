@@ -60,17 +60,24 @@ class Ace {
     }
 
     setupAce(callback) {
-        const source = this.rootURL + '../../components';
+        let source = this.rootURL + '../../components';
 
         if (fs.lstatSync(source).isDirectory() ) {
             const files = fs.readdirSync(source);
 
             files.forEach(( file ) => {
                 if (fs.lstatSync(source + '/' + file).isDirectory() ) {
-                    this.copyResources(source + '/' + file, this.rootURL + 'public/styles', '.css')
-                    this.copyResources(source + '/' + file, this.rootURL + 'public/js', '.js')
+                    this.copyResources(source + '/' + file, this.rootURL + 'public/styles', '.css');
+                    this.copyResources(source + '/' + file, this.rootURL + 'public/js', '.js');
                 }
             });
+        }
+
+        source = this.rootURL + '../../pages';
+
+        if (fs.lstatSync(source).isDirectory() ) {
+            this.copyResources(source, this.rootURL + 'public/styles', '.css');
+            this.copyResources(source, this.rootURL + 'public/js', '.js');
         }
 
         callback();

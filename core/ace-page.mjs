@@ -29,6 +29,15 @@ class AcePage extends AceComponent {
     beforeRender() {
         this.setup();
 
+        if (this.script && this.clientScripts.indexOf(this.script) === -1) {
+            this.clientScripts.push(component.script);
+        }
+
+        if (this.styles) {
+            this.clientStyles.push(this.styles);
+        }
+
+
         this.components.forEach(component => {
             if (component.script && this.clientScripts.indexOf(component.script) === -1) {
                 this.clientScripts.push(component.script);
@@ -115,7 +124,6 @@ class AcePage extends AceComponent {
 
         return resultStr;
     }
-
 
     compile() {
         let headerTemplate = pug.compileFile(this.rootHeaderTemplate)({
