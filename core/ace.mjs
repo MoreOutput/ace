@@ -95,9 +95,9 @@ class Ace {
                         PAGE_CACHE[req.sessionID] = {};
                     }
 
-                    if (!PAGE_CACHE[req.sessionID][page.route]) {
+                    // TODO: page level persists
+                    if (!PAGE_CACHE[req.sessionID][page.route] || PAGE_CACHE[req.sessionID][page.route].persists === false) {
                         PAGE_CACHE[req.sessionID][page.route] = new page.page(page.route);
-
                         PAGE_CACHE[req.sessionID].active = PAGE_CACHE[req.sessionID][page.route];
                     } else {
                         PAGE_CACHE[req.sessionID].active = PAGE_CACHE[req.sessionID][page.route];

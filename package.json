@@ -1,6 +1,29 @@
 {
-  "name": "ace-framework",
-  "version": "0.0.8",
+  "_from": "ace-framework@0.0.8",
+  "_id": "ace-framework@0.0.8",
+  "_inBundle": false,
+  "_integrity": "sha512-KTQUgxeEaRc1qjI1S6Y8AUj5U4Zr0ML5fDFSAb0YZT9AwJW5gc566Hbm1qZcZK//kuyb1Dx72IZ1mFvB/NZ12w==",
+  "_location": "/ace-framework",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "ace-framework@0.0.8",
+    "name": "ace-framework",
+    "escapedName": "ace-framework",
+    "rawSpec": "0.0.8",
+    "saveSpec": null,
+    "fetchSpec": "0.0.8"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/ace-framework/-/ace-framework-0.0.8.tgz",
+  "_shasum": "4900ed7a0f70664a6d288a78ce0151e7e368f3b5",
+  "_spec": "ace-framework@0.0.8",
+  "_where": "C:\\Users\\rbevins\\ace_app",
+  "bundleDependencies": false,
   "dependencies": {
     "body-parser": "1.18.3",
     "commander": "2.15.1",
@@ -9,11 +32,14 @@
     "pug": "^2.0.3",
     "ws": "^6.0.0"
   },
-  "engines": {
-    "node": ">= 8.11.1"
-  },
-  "description": "",
-  "main": "index.mjs",
+  "deprecated": false,
+  "description": "```js\r     import Ace from './core/ace';",
   "devDependencies": {},
-  "keywords": []
+  "engines": {
+    "node": ">= 10.1.0"
+  },
+  "keywords": [],
+  "main": "index.mjs",
+  "name": "ace-framework",
+  "version": "0.0.9"
 }

@@ -105,15 +105,15 @@ export default LoginForm;
 View the included VaadinTextField component to see how to create an ace component from existing web components.
 
 ```js
-import VaadinTextField from '../vaadinTextField/vaadin-text-field.component';
+import VaadinTextField from 'ace-framework';
 
-        this.vaadinField = new VaadinTextField('البادئة و اللاحقة');
-        this.vaadinField.required = true;
-        this.vaadinField.maxlength = 2;
-        this.vaadinField.setPreventValidInput(true);
-        this.vaadinField.setErrorMessage('Error message');
-        this.vaadinField.pattern = '[0-9]';
-        this.vaadinField.setPrefix('$');
+this.vaadinField = new VaadinTextField('البادئة و اللاحقة');
+this.vaadinField.required = true;
+this.vaadinField.maxlength = 2;
+this.vaadinField.setPreventValidInput(true);
+this.vaadinField.setErrorMessage('Error message');
+this.vaadinField.pattern = '[0-9]';
+this.vaadinField.setPrefix('$');
 ```
 
 Run with: node --experimental-modules app.mjs

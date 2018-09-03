@@ -8,7 +8,7 @@ class AceComponent {
         this.script = '';
         this.link = '';
         this.template = '';
-        this.events = {};
+        this.events = Object.create(null, {});
         this.markup;
         this.page;
         this.parent;
@@ -83,6 +83,17 @@ class AceComponent {
 
     addEvent(eventName, callback) {
         this.events[eventName] = callback;
+    }
+
+    getEvents() {
+        let prop;
+        let events = [];
+
+        for (prop in this.events) {
+            events.push(prop);
+        }
+
+        return events;
     }
 
     processEvent(eventName) {

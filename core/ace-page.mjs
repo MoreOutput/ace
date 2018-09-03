@@ -1,7 +1,6 @@
 import pug from 'pug';
 
 import AceComponent from './ace.component';
-import path from 'path';
 
 class AcePage extends AceComponent {
     constructor(route = '') {
@@ -12,6 +11,7 @@ class AcePage extends AceComponent {
         this.ace; 
         this.route = route;
         this.title = 'Ace Page';
+        this.persists = false;
 
         const rootUrl = this.getDir(import.meta.url);
 
@@ -25,11 +25,11 @@ class AcePage extends AceComponent {
         this.clientLinks = [];
     }
 
+    // TODO: make recursive, remove page reference use sessionId and cache.
     beforeRender() {
         this.setup();
 
         this.components.forEach(component => {
-
             if (component.script && this.clientScripts.indexOf(component.script) === -1) {
                 this.clientScripts.push(component.script);
             }
@@ -60,13 +60,13 @@ class AcePage extends AceComponent {
             });
 
             component.page = this;
-
             component.update(component);
         });
     }
 
     compileComponent(component) {
         if (!component.template) {
+            // TODO, default component template
             return '<span data-ace-' + component.cmpType + '="' + component.cmpId + '">';
         } else {
             let dataMap = component.getPugMap(component.getData());
@@ -107,7 +107,7 @@ class AcePage extends AceComponent {
             resultStr += wrapperStr;
         } else {
             resultStr += this.compileComponent(component);
-            
+
             if (!component.template) {
                 resultStr += '</span>'
             }
@@ -134,11 +134,7 @@ class AcePage extends AceComponent {
         for (i; i < this.components.length; i += 1) {
             let component = this.components[i];
 
-            if (component.components.length > 0) {
-                baseTemplate += this.compileComponentRescursive(component);
-            } else {
-                baseTemplate += this.compileComponentRescursive(component);
-            }
+            baseTemplate += this.compileComponentRescursive(component);
         }
 
         return headerTemplate + baseTemplate + footerTemplate;
@@ -147,16 +143,18 @@ class AcePage extends AceComponent {
     render(req, res, ace) {
         this.req = req;
         this.res = res;
-        this.ace = ace;
 
-        this.components = [];
+        if (!this.template) {
+            this.ace = ace;
 
-        this.beforeRender();
+            this.beforeRender();
+        }
+
+        this.template = this.compile();
 
         this.res.type('text/html');
         this.res.status(200);
-
-        this.res.send(this.compile());
+        this.res.send(this.template);
     }
 
     redirect(route) {
