@@ -116,4 +116,29 @@ this.vaadinField.pattern = '[0-9]';
 this.vaadinField.setPrefix('$');
 ```
 
+## Layout
+Ace Components can be assigned custom style files, but its also possible to leverage CSS Grid.
+
+```js
+import { AceComponet, ButtonElementComponent, Layout } from 'ace-framework';
+
+const CSS_GRID = [
+    'firstName lastName submitButton',
+    'grid grid grid'
+];
+
+class TestComponent extends AceComponent {
+    this.submitButton = new ButtonElementComponent('Add User');
+
+    this.layout = new Layout(CSS_GRID);
+    this.layout.addItem('submitButton', this.submitButton);
+
+    this.add(this.layout);
+}
+
+export default TestComponent;
+
+```
+
+
 Run with: node --experimental-modules app.mjs

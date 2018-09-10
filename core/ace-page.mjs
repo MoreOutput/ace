@@ -11,8 +11,9 @@ class AcePage extends AceComponent {
         this.ace; 
         this.route = route;
         this.title = 'Ace Page';
+        this.baseElement = 'div';
         this.persists = false;
-
+        this.css = '';
         const rootUrl = this.getDir(import.meta.url);
 
         this.rootTemplate =  rootUrl + '/root.template.pug';
@@ -25,6 +26,47 @@ class AcePage extends AceComponent {
         this.clientLinks = [];
     }
 
+    renderComponent(component) {
+        component.parent = this;
+        component.page = this;
+
+        if (component.script && this.clientScripts.indexOf(component.script) === -1) {
+            this.clientScripts.push(component.script);
+        }
+
+        if (component.scripts.length) {
+            this.clientScripts = this.clientScripts.concat(component.scripts);
+        }
+
+        if (component.link && this.clientLinks.indexOf(component.link) === -1) {
+            this.clientLinks.push(component.link);
+        }
+
+        if (component.links.length) {
+            this.clientLinks = this.clientLinks.concat(component.links);
+        }
+
+        if (component.style) {
+            this.clientStyles.push(component.style);
+        }
+
+        if (component.styles.length) {
+            this.clientStyles = this.clientStyles.concat(component.styles);
+        }
+
+        if (component.layout === true) {
+            const clientStyle = component.writeLayout();
+
+            this.clientStyles.push(clientStyle);
+        }
+
+        component.components.forEach(nestedComponent => {
+           this.renderComponent(nestedComponent);
+        });
+
+        component.update(component);
+    }
+
     // TODO: make recursive, remove page reference use sessionId and cache.
     beforeRender() {
         this.setup();
@@ -33,50 +75,35 @@ class AcePage extends AceComponent {
             this.clientScripts.push(component.script);
         }
 
-        if (this.styles) {
-            this.clientStyles.push(this.styles);
+        if (this.scripts.length) {
+            this.clientScripts = this.clientScripts.concat(this.scripts);
         }
 
+        if (this.link && this.clientLinks.indexOf(this.link) === -1) {
+            this.clientLinks.push(this.link);
+        }
+
+        if (this.links.length) {
+            this.clientLinks = this.clientLinks.concat(this.links);
+        }
+
+        if (this.style) {
+            this.clientStyles.push(this.style);
+        }
+
+        if (this.styles.length) {
+            this.clientStyles = this.clientStyless.concat(this.styles);
+        }
 
         this.components.forEach(component => {
-            if (component.script && this.clientScripts.indexOf(component.script) === -1) {
-                this.clientScripts.push(component.script);
-            }
-
-            if (component.styles) {
-                this.clientStyles.push(component.styles);
-            }
-
-            component.components.forEach(nestedComponent => {
-                if (nestedComponent.script && this.clientScripts.indexOf(nestedComponent.script) === -1) {
-                    this.clientScripts.push(nestedComponent.script);
-                }
-
-                if (nestedComponent.styles && this.clientStyles.indexOf(nestedComponent.styles) === -1) {
-                    this.clientStyles.push(nestedComponent.styles);
-                }
-
-                if (nestedComponent.link && this.clientLinks.indexOf(nestedComponent.link) === -1) {
-                    this.clientLinks.push(nestedComponent.link);
-                }
-
-                nestedComponent.page = this;
-                nestedComponent.parent = component;
-
-                nestedComponent.setup();
-
-                nestedComponent.update(nestedComponent);
-            });
-
-            component.page = this;
-            component.update(component);
+           this.renderComponent(component);
         });
     }
 
     compileComponent(component) {
         if (!component.template) {
             // TODO, default component template
-            return '<span data-ace-' + component.cmpType + '="' + component.cmpId + '">';
+            return '<' + this.baseElement + ' data-ace-' + component.cmpType + '="' + component.cmpId + '">';
         } else {
             let dataMap = component.getPugMap(component.getData());
 
@@ -94,7 +121,7 @@ class AcePage extends AceComponent {
             resultStr += this.compileComponent(component);
 
             if (!component.template) {
-                wrapperStr = '</span>';
+                wrapperStr = '</' + this.baseElement + '>';
             } else {
                 let wrapperRegEx = /(<\/.*?>)/;
                 const matches = wrapperRegEx.exec(resultStr);
@@ -118,7 +145,7 @@ class AcePage extends AceComponent {
             resultStr += this.compileComponent(component);
 
             if (!component.template) {
-                resultStr += '</span>'
+                resultStr += '</' + this.baseElement + '>'
             }
         }
 

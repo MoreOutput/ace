@@ -1,0 +1,12 @@
+dom-bind
+    template
+        vaadin-grid(aria-label='' items=dataMap.data  multiSort=true)
+            each col in dataMap.columns
+                vaadin-grid-column(width=col.width flex-grow='0')
+                    if col.sortable === true
+                        template(class='header')
+                            vaadin-grid-sorter(path='firstName')  #{col.header}
+                    else
+                        template(class='header') #{col.header}
+                    template !{ col.body }
+                    template(class="footer") #{col.footer}

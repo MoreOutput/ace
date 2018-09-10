@@ -1,27 +1,27 @@
 {
-  "_from": "ace-framework@0.0.9",
-  "_id": "ace-framework@0.0.9",
+  "_from": "ace-framework@0.0.10",
+  "_id": "ace-framework@0.0.10",
   "_inBundle": false,
-  "_integrity": "sha512-IoGi/sBvSO9otIb4zBefCc5+UHxL1UFWAWkdfBFQX74mbs/tq/a1vlhPh6Y6yIqTbdC8OjDz/sR3EzAS2xtgkg==",
+  "_integrity": "sha512-CVDfWujuKamFYfwn+iCRTUQYl2xF1ReCFaC+izNYu6hVSdTWTXuZw69zpPi7z6bSzwkKd3mKCwPXj8Vp910SDA==",
   "_location": "/ace-framework",
   "_phantomChildren": {},
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "ace-framework@0.0.9",
+    "raw": "ace-framework@0.0.10",
     "name": "ace-framework",
     "escapedName": "ace-framework",
-    "rawSpec": "0.0.9",
+    "rawSpec": "0.0.10",
     "saveSpec": null,
-    "fetchSpec": "0.0.9"
+    "fetchSpec": "0.0.10"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/ace-framework/-/ace-framework-0.0.9.tgz",
-  "_shasum": "3252237d57f2b62be924f91db33b8b64e20dfe92",
-  "_spec": "ace-framework@0.0.9",
+  "_resolved": "https://registry.npmjs.org/ace-framework/-/ace-framework-0.0.10.tgz",
+  "_shasum": "5947184784d7f023a66ae2c89e4ffda3e22bd0b5",
+  "_spec": "ace-framework@0.0.10",
   "_where": "C:\\Users\\rbevins\\ace_app",
   "bundleDependencies": false,
   "dependencies": {
@@ -41,5 +41,5 @@
   "keywords": [],
   "main": "index.mjs",
   "name": "ace-framework",
-  "version": "0.0.9"
+  "version": "0.0.10"
 }

@@ -3,7 +3,7 @@ import DivElementComponent from '../elements/div/div-element.ace.component';
 
 // https://vaadin.com/components/vaadin-text-field/html-examples/text-field-lumo-theme-demos
 class VaadinTextField extends AceComponent {
-    constructor(label = '') {
+    constructor(label = '', placeholder = '') {
         super();
 
         const rootUrl = this.getDir(import.meta.url);
@@ -21,6 +21,7 @@ class VaadinTextField extends AceComponent {
         this.wrapperDiv;
         this.slotDiv;
         this.slot;
+        this.placeholder = placeholder;
         this.slotText;
     }
 
@@ -73,6 +74,10 @@ class VaadinTextField extends AceComponent {
     setSuffix(str) {
         this.slot = 'suffix';
         this.slotText = str;
+    }
+
+    clear() {
+        this.value = '';
     }
 
     getDataMap() {

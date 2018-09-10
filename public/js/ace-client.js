@@ -16,12 +16,13 @@
 		return r.json();
 	}).then(r => {
 		document.aceSessionId = r.id;
+
+		var style = document.getElementById('ace-styles');
+		style.innerHTML = r.styles;
 	});
 
 	ws.addEventListener('message', function(r) {
 		r = JSON.parse(r.data);
-
-		console.log(r);
 
 		if (r.route) {
 			return window.location.href = r.route.url;

@@ -60,6 +60,7 @@ class Ace {
     }
 
     setupAce(callback) {
+        const pageDir = this.rootURL + '../../pages';
         let source = this.rootURL + '../../components';
 
         if (fs.lstatSync(source).isDirectory() ) {
@@ -88,7 +89,16 @@ class Ace {
         let i = 0;
 
         this.express.get('/get-ace-sessionid', (req, res) => {
-            return res.json({id: req.sessionID});
+            // send styling data
+            this.io.send(JSON.stringify({
+                meta: {
+                    styles: PAGE_CACHE[req.sessionID].active.layout
+                }
+            }));
+
+            return res.json({
+                id: req.sessionID
+            });
         });
 
         for (prop in Pages) {

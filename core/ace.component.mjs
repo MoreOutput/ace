@@ -5,8 +5,12 @@ class AceComponent {
     constructor() {
         this.cmpId = this.generateId();
         this.cmpType = this.constructor.name;
+        this.style = '';
+        this.styles = [];
         this.script = '';
+        this.scripts = [];
         this.link = '';
+        this.links = [];
         this.template = '';
         this.events = Object.create(null, {});
         this.markup;
@@ -110,7 +114,7 @@ class AceComponent {
 
         for (prop in dataMap) {
             if (this[prop] !== undefined && this[prop] !== '' && this[prop] !== false) {
-                result[prop] = this[prop].toString();
+                result[prop] = this[prop];
             }
         };
 
