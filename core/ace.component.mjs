@@ -1,4 +1,3 @@
-import path from 'path';
 import pug from 'pug';
 
 class AceComponent {
@@ -25,7 +24,15 @@ class AceComponent {
     }
 
     compile() {
-        return pug.compileFile(this.template);
+        if (this.template) {
+            if (this.template.indexOf('.pug') !== -1) {
+                return pug.compileFile(this.template);
+            } else {
+                return pug.compile(this.template)(this);
+            }
+        } else {
+            return false;
+        }
     }
 
     generateId() {
@@ -53,26 +60,16 @@ class AceComponent {
         return result;
     }
 
-    getComponentData(component, data = []) {
-        component.components.forEach(component => {
+    getComponentData(data = []) {
+        this.components.forEach(component => {
             let newDataObj = component.getData();
 
             data.push(newDataObj);
 
-            if (component.hasComponents()) {
-                return this.getComponentData(component, data);
-            }
+            component.getComponentData(data);
         });
 
         return data;
-    }
-
-    pushStateUpdate() {
-        let data = this.getComponentData(this.page);
-
-        if (data.length) {
-            this.page.ace.io.send(JSON.stringify(data));
-        }
     }
 
     update(updateObj) {
@@ -100,14 +97,16 @@ class AceComponent {
         return events;
     }
 
-    processEvent(eventName) {
+    processEvent(eventName, page) {
         if (this.events[eventName]) {
             this.events[eventName](this);
 
-            this.pushStateUpdate();
+            page.pushStateUpdate();
         }
     }
 
+    // take in a data map and turn it into an object that can
+    // be used within a pug template
     getPugMap(dataMap) {
         let result = {};
         let prop;
@@ -123,15 +122,6 @@ class AceComponent {
         return result;
     };
 
-    redirect(route) {
-        this.page.ace.io.send(JSON.stringify({
-            route: {
-                url: route,
-                data: {},
-                title: 'Routing'
-            },
-        }));
-    }
 
     removeComponentById(id) {
         let result = [];
@@ -153,11 +143,9 @@ class AceComponent {
                 result = component;
             }
 
-            component.components.forEach(nestedComponent => {
-                if (nestedComponent.cmpId === id && !result) {
-                    result = nestedComponent;
-                }
-            });
+            if (!result) {
+                result = component.getComponentById(id);
+            }
         });
 
         return result;
@@ -169,13 +157,6 @@ class AceComponent {
         }
 
         return false;
-    }
-
-    getDir(url) {
-        const moduleURL = new URL(url);
-        const __dirname = path.dirname(moduleURL.pathname).replace('/', '');
-
-        return __dirname;
     }
 };
 

@@ -1,27 +1,27 @@
 {
-  "_from": "ace-framework@0.0.10",
-  "_id": "ace-framework@0.0.10",
+  "_from": "ace-framework@0.0.11",
+  "_id": "ace-framework@0.0.11",
   "_inBundle": false,
-  "_integrity": "sha512-CVDfWujuKamFYfwn+iCRTUQYl2xF1ReCFaC+izNYu6hVSdTWTXuZw69zpPi7z6bSzwkKd3mKCwPXj8Vp910SDA==",
+  "_integrity": "sha512-z8OpA/ksJqOugH2exEAitboMsXqBx5mK6Can+Xct+JshuIArAsbPsb+YtlKOMO64igOucm/mNm+sP7YvpH5KxQ==",
   "_location": "/ace-framework",
   "_phantomChildren": {},
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "ace-framework@0.0.10",
+    "raw": "ace-framework@0.0.11",
     "name": "ace-framework",
     "escapedName": "ace-framework",
-    "rawSpec": "0.0.10",
+    "rawSpec": "0.0.11",
     "saveSpec": null,
-    "fetchSpec": "0.0.10"
+    "fetchSpec": "0.0.11"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/ace-framework/-/ace-framework-0.0.10.tgz",
-  "_shasum": "5947184784d7f023a66ae2c89e4ffda3e22bd0b5",
-  "_spec": "ace-framework@0.0.10",
+  "_resolved": "https://registry.npmjs.org/ace-framework/-/ace-framework-0.0.11.tgz",
+  "_shasum": "f338f89dbac86f306d75461e94c4a3fb0c141f29",
+  "_spec": "ace-framework@0.0.11",
   "_where": "C:\\Users\\rbevins\\ace_app",
   "bundleDependencies": false,
   "dependencies": {
@@ -33,13 +33,40 @@
     "ws": "^6.0.0"
   },
   "deprecated": false,
-  "description": "```js\r     import Ace from './core/ace';",
-  "devDependencies": {},
+  "description": "Server Client Web Component Framework",
+  "devDependencies": {
+    "ava": "1.0.0-beta.8",
+    "nyc": "^13.0.1"
+  },
   "engines": {
     "node": ">= 10.1.0"
   },
   "keywords": [],
   "main": "index.mjs",
   "name": "ace-framework",
-  "version": "0.0.10"
+  "version": "0.0.12",
+  "scripts": {
+    "test": "nyc --reporter=html --reporter=text ava"
+  },
+  "nyc": {
+    "exclude": [
+      "modules",
+      "node_modules",
+      "bower_components",
+      "tests"
+    ],
+    "extension": [
+      ".js",
+      ".mjs"
+    ]
+  },
+  "ava": {
+    "require": [
+      "esm"
+    ],
+    "babel": false,
+    "extensions": [
+      "mjs"
+    ]
+  }
 }

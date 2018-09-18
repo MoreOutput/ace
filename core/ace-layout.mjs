@@ -76,7 +76,7 @@ class Layout extends AceComponent {
         
         let str = '.ace-grid-container {\n' +
             'display: grid; \n' +
-            'grid-template-areas: \n' + mapStr + '\n}' ;
+            'grid-template-areas: \n' + mapStr + '}\n' ;
 
         this.items.forEach(item => {
             str += '.' + item + '-al' + '{grid-area: ' + item.replace('-al', '') + '}\n';

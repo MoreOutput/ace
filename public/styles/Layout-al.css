@@ -1,0 +1,9 @@
+.ace-grid-container {
+display: grid; 
+grid-template-areas: 
+"fields fields fields"
+"buttons empty empty"
+}
+.fields-al{grid-area: fields}
+.buttons-al{grid-area: buttons}
+.empty-al{grid-area: empty}

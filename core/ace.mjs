@@ -127,13 +127,14 @@ class Ace {
     }
 
     processReponse(r) {
-        let component = PAGE_CACHE[r.id].active.getComponentById(r.cmpId);
+        const page = PAGE_CACHE[r.id].active;
+        let component = page.getComponentById(r.cmpId);
 
         if (component) {
             component.update(r);
         
             if (r.event) {
-                component.processEvent(r.event);
+                component.processEvent(r.event, page);
             }
         } else {
             console.warn('Component Reference not found', r);

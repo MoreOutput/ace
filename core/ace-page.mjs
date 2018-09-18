@@ -113,6 +113,14 @@ class AcePage extends AceComponent {
         }
     }
 
+    pushStateUpdate() {
+        let data = this.getComponentData();
+
+        if (data.length) {
+            this.ace.io.send(JSON.stringify(data));
+        }
+    }
+
     compileComponentRescursive(component) {
         let resultStr = '';
         let wrapperStr = '';
