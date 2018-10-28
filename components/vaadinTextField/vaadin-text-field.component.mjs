@@ -1,12 +1,11 @@
-import AceComponent from '../../core/ace.component';
-import DivElementComponent from '../elements/div/div-element.ace.component';
+import { AceComponent, DivElementComponent, AcePath } from 'ace-framework';
 
 // https://vaadin.com/components/vaadin-text-field/html-examples/text-field-lumo-theme-demos
 class VaadinTextField extends AceComponent {
     constructor(label = '', placeholder = '') {
         super();
 
-        const rootUrl = this.getDir(import.meta.url);
+        const rootUrl = AcePath.getDir(import.meta.url);
 
         this.template = rootUrl + '/vaadin-text-field.component.pug';
         this.link = 'vaadin-text-field/vaadin-text-field';

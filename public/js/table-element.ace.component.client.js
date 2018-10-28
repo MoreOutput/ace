@@ -1,7 +1,7 @@
 (() => {
-    const cmpType = 'DivElementComponent';
+    const cmpType = 'TableElementComponent';
     const attrName = 'data-ace-' + cmpType;
-    let nodes = document.querySelectorAll('div[' + attrName + ']');
+    let nodes = document.querySelectorAll('table[' + attrName + ']');
 
     nodes.forEach(element => {
         const id = element.getAttribute(attrName);

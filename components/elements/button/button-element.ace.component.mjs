@@ -1,10 +1,10 @@
-import ElementComponent from '../element.ace.component';
+import { ElementComponent, AcePath } from 'ace-framework';
 
 class ButtonElementComponent extends ElementComponent {
     constructor(text = '') {
         super();
 
-        const rootUrl = this.getDir(import.meta.url);
+        const rootUrl = AcePath.getDir(import.meta.url);
 
         this.text = text;
         this.template = rootUrl + '/button-element.ace.component.pug';

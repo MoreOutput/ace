@@ -1,10 +1,11 @@
 import BootstrapComponent from '../bootstrap.ace.component';
+import { AcePath } from 'ace-framework';
 
 class BootstrapInput extends BootstrapComponent {
     constructor(labelText = '') {
         super();
 
-        const rootUrl = this.getDir(import.meta.url);
+        const rootUrl = AcePath.getDir(import.meta.url);
 
         this.value = '';
         this.template = rootUrl + '/input.component.pug';

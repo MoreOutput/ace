@@ -1,6 +1,7 @@
 import pug from 'pug';
 
-import AceComponent from './ace.component';
+import AceComponent from './ace-component';
+import AcePath from './ace-path';
 
 class AcePage extends AceComponent {
     constructor(route = '') {
@@ -8,13 +9,15 @@ class AcePage extends AceComponent {
 
         this.req;
         this.res;
-        this.ace; 
+        this.ace;
         this.route = route;
         this.title = 'Ace Page';
         this.baseElement = 'div';
         this.persists = false;
         this.css = '';
-        const rootUrl = this.getDir(import.meta.url);
+
+        const rootUrl = AcePath.getDir(import.meta.url);
+        //const rootUrl = '';
 
         this.rootTemplate =  rootUrl + '/root.template.pug';
         this.rootHeaderTemplate = rootUrl + '/root-header.template.pug';
@@ -27,8 +30,12 @@ class AcePage extends AceComponent {
     }
 
     renderComponent(component) {
+        // TODO: make sure pages do not carry a reference to themselves
         component.parent = this;
         component.page = this;
+
+        // component specific setup
+        component.setup();
 
         if (component.script && this.clientScripts.indexOf(component.script) === -1) {
             this.clientScripts.push(component.script);
@@ -69,8 +76,6 @@ class AcePage extends AceComponent {
 
     // TODO: make recursive, remove page reference use sessionId and cache.
     beforeRender() {
-        this.setup();
-
         if (this.script && this.clientScripts.indexOf(this.script) === -1) {
             this.clientScripts.push(component.script);
         }
@@ -149,12 +154,16 @@ class AcePage extends AceComponent {
             });
 
             resultStr += wrapperStr;
+
+            component.rendered = true;
         } else {
             resultStr += this.compileComponent(component);
 
             if (!component.template) {
                 resultStr += '</' + this.baseElement + '>'
             }
+
+            component.rendered = true;
         }
 
         return resultStr;
@@ -180,12 +189,34 @@ class AcePage extends AceComponent {
             baseTemplate += this.compileComponentRescursive(component);
         }
 
+        this.loaded = true;
+
         return headerTemplate + baseTemplate + footerTemplate;
+    }
+
+    forEachComponent(fn, componentArr) {
+        if (!componentArr) {
+            componentArr = this.components;
+        }
+
+        componentArr.forEach(component => {
+            fn(component);
+
+            this.forEachComponent(fn, component.components);
+        });
     }
 
     render(req, res, ace) {
         this.req = req;
         this.res = res;
+
+        this.setup();
+
+        this.forEachComponent(cmp => {
+            if (cmp.beforeLoad) {
+                cmp.beforeLoad();
+            }
+        });
 
         if (!this.template) {
             this.ace = ace;
@@ -200,14 +231,25 @@ class AcePage extends AceComponent {
         this.res.send(this.template);
     }
 
-    redirect(route) {
-        this.ace.io.send(JSON.stringify({
-            route: {
-                url: route,
-                data: {},
-                title: 'Routing'
-            },
-        }));
+    update() {
+        this.template = this.compile();
+
+        this.ace.io.send(JSON.stringify({page: this.template}));
+    }
+
+    sendComponentMessage(component, obj) {
+        obj.componentMessage = true;
+        obj.data.cmpId = component.cmpId;
+        obj.data.cmpType = component.cmpType;
+        obj.data.scripts = [component.script];
+
+        component.forEachComponent((cmp) => {
+            if (cmp.script && obj.data.scripts.indexOf(cmp.script) === -1) {
+                obj.data.scripts.push(cmp.script);
+            }
+        });
+
+        this.ace.io.send(JSON.stringify(obj));
     }
 
     addStyle(stylePath) {

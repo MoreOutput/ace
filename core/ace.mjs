@@ -5,6 +5,8 @@ import express from 'express';
 import session from 'express-session';
 import bodyParser from 'body-parser';
 import fs from 'fs';
+import AcePath from './ace-path';
+import AceRoute from './ace-route';
 
 const PAGE_CACHE = {
     // sessionId : {active: page, 'route': page, ...}
@@ -17,7 +19,7 @@ class Ace {
 
         const ws = new WebSocket.Server({ port: 3001 });
         
-        this.rootURL = this.getDir(import.meta.url).replace('core', '');
+        this.rootURL = AcePath.getDir(import.meta.url).replace('core', '');
         this.server = http.createServer();
         this.express = express();
         this.io;
@@ -27,7 +29,7 @@ class Ace {
         this.express.use('/js', express.static(this.rootURL + '/public/js'));
         this.express.use('/polymer', express.static(this.rootURL + '/bower_components'));
         this.express.use(session({
-            secret: 'h3sdgsp8223e23x234tgddxcxdfdsasdsG',
+            secret: 'h3sdgsp8223e23x234tgddx782cxdfdsasdsG',
             resave: false,
             saveUninitialized: true
         }));
@@ -42,18 +44,8 @@ class Ace {
             next();
         });
 
-        ws.on('connection', (s) => {
-            this.io = s;
-
-            s.on('message', (r) => {
-                r = JSON.parse(r);
-
-                this.processReponse(r);
-            });
-        });
-
         this.setupAce(() => {
-            this.setupRoutes();
+            this.setupRoutes(ws);
         });
 
         this.express.listen(this.config.port);
@@ -84,18 +76,12 @@ class Ace {
         callback();
     }
 
-    setupRoutes(route) {
+    setupRoutes(ws) {
+        let router;
         let prop;
         let i = 0;
 
         this.express.get('/get-ace-sessionid', (req, res) => {
-            // send styling data
-            this.io.send(JSON.stringify({
-                meta: {
-                    styles: PAGE_CACHE[req.sessionID].active.layout
-                }
-            }));
-
             return res.json({
                 id: req.sessionID
             });
@@ -112,7 +98,6 @@ class Ace {
                         PAGE_CACHE[req.sessionID] = {};
                     }
 
-                    // TODO: page level persists
                     if (!PAGE_CACHE[req.sessionID][page.route] || PAGE_CACHE[req.sessionID][page.route].persists === false) {
                         PAGE_CACHE[req.sessionID][page.route] = new page.page(page.route);
                         PAGE_CACHE[req.sessionID].active = PAGE_CACHE[req.sessionID][page.route];
@@ -120,19 +105,40 @@ class Ace {
                         PAGE_CACHE[req.sessionID].active = PAGE_CACHE[req.sessionID][page.route];
                     }
 
+                    ws.on('connection', (s) => {
+                        this.io = s;
+
+                        if (!router) {
+                            router = new AceRoute(s);
+                        }
+
+                        if (!PAGE_CACHE[req.sessionID].active.router) {
+                            PAGE_CACHE[req.sessionID].active.router = router;
+                        }
+            
+                        s.on('message', (r) => {
+                            r = JSON.parse(r);
+                            // TODO factor out carrying this.io
+                            console.log(123);
+                            this.processReponse(r);
+                        });
+                    });
+
                     return PAGE_CACHE[req.sessionID].active.render(req, res, this);
                 });
             }
         }
     }
 
-    processReponse(r) {
-        const page = PAGE_CACHE[r.id].active;
+    processReponse(r, io) {
+        let page = PAGE_CACHE[r.id].active;
         let component = page.getComponentById(r.cmpId);
+
+        PAGE_CACHE[r.id].io = io;
 
         if (component) {
             component.update(r);
-        
+
             if (r.event) {
                 component.processEvent(r.event, page);
             }
@@ -175,13 +181,6 @@ class Ace {
                 }
             });
         }
-    }
-
-    getDir(url) {
-        const moduleURL = new URL(url);
-        const __dirname = path.dirname(moduleURL.pathname).replace('/', '');
-
-        return __dirname;
     }
 }
 

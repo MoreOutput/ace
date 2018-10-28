@@ -44,7 +44,7 @@
   "keywords": [],
   "main": "index.mjs",
   "name": "ace-framework",
-  "version": "0.0.12",
+  "version": "0.0.11",
   "scripts": {
     "test": "nyc --reporter=html --reporter=text ava"
   },

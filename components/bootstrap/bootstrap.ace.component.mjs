@@ -1,10 +1,10 @@
-import AceComponent from '../../core/ace.component';
+import { AceComponent, AcePath } from 'ace-framework';
 
 class BootstrapComponent extends AceComponent {
     constructor(element = '') {
         super();
 
-        const rootUrl = this.getDir(import.meta.url);
+        const rootUrl = AcePath.getDir(import.meta.url);
 
         this.element = element;
         this.template = rootUrl + '/bootstrap.ace.component.pug';

@@ -1,9 +1,10 @@
 .ace-grid-container {
 display: grid; 
 grid-template-areas: 
-"fields fields fields"
-"buttons empty empty"
+"username password"
+"loginButton resetButton"
 }
-.fields-al{grid-area: fields}
-.buttons-al{grid-area: buttons}
-.empty-al{grid-area: empty}
+.username-al{grid-area: username}
+.password-al{grid-area: password}
+.loginButton-al{grid-area: loginButton}
+.resetButton-al{grid-area: resetButton}

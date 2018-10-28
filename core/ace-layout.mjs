@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import AceComponent from './ace.component';
+import AceComponent from './ace-component';
 import AceElement from '../components/elements/element.ace.component';
 
 const GRID_STR = 'grid';
@@ -64,16 +64,13 @@ class Layout extends AceComponent {
 
     writeLayout() {
         const fileName = this.parent.ace.rootURL + 'public/styles/' + this.cmpType + '-al.css';
-        
         let mapStr = '';
         let i = 0;
 
         for (i; i < this.gridMap.length; i += 1) {
             mapStr += '"' + this.gridMap[i].toString() + '"\n';
         }
-        
-        
-        
+
         let str = '.ace-grid-container {\n' +
             'display: grid; \n' +
             'grid-template-areas: \n' + mapStr + '}\n' ;

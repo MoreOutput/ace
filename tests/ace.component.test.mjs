@@ -1,5 +1,5 @@
 import test from 'ava';
-import AceComponent from '../core/ace.component';
+import AceComponent from '../core/ace-component';
 
 test('should create a component with a defined cmpId and cmpType', t => {
     const cmp = new AceComponent();

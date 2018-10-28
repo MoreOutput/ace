@@ -1,10 +1,10 @@
-import ElementComponent from '../element.ace.component';
+import { ElementComponent, AcePath } from 'ace-framework';
 
 class DivElementComponent extends ElementComponent {
     constructor(text = '', id = '') {
         super();
 
-        const rootUrl = this.getDir(import.meta.url);
+        const rootUrl = AcePath.getDir(import.meta.url);
 
         this.text = text;
         this.id = '';
